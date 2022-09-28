@@ -1,5 +1,6 @@
 const Category = require('./category.class');
 const Product = require('./product.class');
+const datosIni = require('./datosIni.json');
 
 class Store {
     constructor(id, name) {
@@ -134,6 +135,18 @@ class Store {
         return "Almacén " + this.id + " => " + this.products.length + " productos: " + this.totalImport + " €" 
         + this.products.forEach((product) => product.toString);
     }
+
+    initDatos() {
+        let categorias = datosIni.categories;
+        categorias.forEach((category) => {
+            this.categories.push(new Category(category.id, category.name,category.description))
+        })
+        let productos = datosIni.products;
+        productos.forEach((producto) => {
+            this.products.push(new Product(producto.id, producto.name, producto.category, producto.price, producto.units))
+        })
+    }
 }
+
 
 module.exports = Store

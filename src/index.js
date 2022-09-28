@@ -6,6 +6,9 @@ const Store = require('./store.class');
 const myStore = new Store(1, 'Almacén de ACME')
 
 // Añadimos los objetos
+
+myStore.initDatos();
+
 try {
     var catInformatica = myStore.addCategory('Informática')
 } catch(err) {
