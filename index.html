@@ -13,30 +13,26 @@
 <body>
 	<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
 		<div class="container-fluid">
-		  <span class="navbar-brand" href="#">Almacén ACME</span>
-		  <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-			<div class="navbar-nav">
-			  <a class="nav-link active" aria-current="page" href="#">Productos</a>
-			  <a class="nav-link" href="#">Categorías</a>
-			  <a class="nav-link" href="#">Añadir producto</a>
-			  <a class="nav-link" href="#">Añadir categoría</a>
-			  <a class="nav-link" href="#">Sobre nosotros</a>
+			<span class="navbar-brand" href="#">Almacén ACME</span>
+			<div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+				<div class="navbar-nav">
+					<a class="nav-link active" aria-current="page" href="#">Productos</a>
+					<a class="nav-link" href="#">Categorías</a>
+					<a class="nav-link" href="#">Añadir producto</a>
+					<a class="nav-link" href="#">Añadir categoría</a>
+					<a class="nav-link" href="#">Sobre nosotros</a>
+				</div>
 			</div>
-		  </div>
 		</div>
-	  </nav>
+	</nav>
 
-	  <div class="container">
+	<div class="container">
         <header>
             <h1>Listado de productos</h1>
         </header>
 
         <!-- Zona para mostrar mensajes al usuario -->
         <div class="row" id="messages">
-			  <div class="alert alert-danger alert-dismissible" role="alert">
-				Ejemplo de mensaje de error
-				<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close" onclick="this.parentElement.remove()"></button>
-			  </div>
 		</div>
 
         <!-- Almacén de productos -->
@@ -55,24 +51,7 @@
                         </tr>
                     </thead>
                     <tbody>
-						<tr>
-                            <td>1</td>
-                            <td>Prod 1</td>
-                            <td>2</td>
-                            <td>4</td>
-                            <td>44.95 €/u</td>
-                            <td>88.80 €</td>
-                            <td></td>
-                        </tr>
-						<tr>
-                            <td>3</td>
-                            <td>Prod 3</td>
-                            <td>1</td>
-                            <td>10</td>
-                            <td>349.95 €/u</td>
-                            <td>3499.50 €</td>
-                            <td></td>
-                        </tr>
+					
                         <!-- Aquí insertaremos los productos-->
                     </tbody>
                     <tfoot>
@@ -85,7 +64,7 @@
         </div>
 
 
-		        <!-- Acciones sobre el almacén -->
+				<!-- Acciones sobre el almacén -->
 				<div class="row">
 					<div class="col-sm-6 col-md-4 col-lg-4">
 						<form id="new-prod">
@@ -102,14 +81,13 @@
 								</div>
 								<div class="form-group">
 									<label for="newprod-cat">Categoría:</label>
-									<select class="form-control">
-										<option value="">--- Selecciona categoría ---</option>
+									<select class="form-control" id="newprod-cat">
+										<option value="" id="">--- Selecciona categoría ---</option>
 										</select>
 								</div>
-
 								<div class="form-group">
 									<label for="newprod-units">Unidades.:</label>
-									<input type="number" class="form-control">
+									<input type="number" id="newprod-units" class="form-control">
 								</div>
 								<div class="form-group">
 									<label for="newprod-price">Precio/u.:</label>
@@ -122,10 +100,25 @@
 						</form>
 					</div>
 					<div class="col-sm-6 col-md-4 col-lg-4">
-						<form>
+						<form id="new-cat">
 							<fieldset>
 								<legend class="bg-dark text-white text-center">Añadir categoría</legend>
-								<!-- Aquí los inputs y botones del form -->
+								<div class="form-group">
+									<label for="newcat-id">ID:</label>
+									<input type="text" class="form-control" disabled>
+								</div>
+								<div class="form-group">
+									<label for="newcat-name">Nombre:</label>
+									<input type="text" id="newcat-name" class="form-control">
+								</div>
+								<div class="form-group">
+									<label for="newpcat-desc">descripción:</label>
+									<input type="text" id="newcat-desc" class="form-control">
+								</div>
+								<br>
+								<button type="submit" class="btn btn-default btn-dark">Añadir</button>
+								<button type="reset" class="btn btn-danger">Reset</button>
+								
 							</fieldset>
 						</form>
 					</div>
@@ -136,7 +129,7 @@
 								<!-- Aquí los inputs y botones del form -->
 								<div class="form-group">
 									<label for="delprod-id">ID:</label>
-									<input type="text" class="form-control">
+									<input type="text" id="delprod-id" class="form-control">
 								</div>
 								<br>
 								<button type="submit" class="btn btn-default btn-dark">Añadir</button>
@@ -144,16 +137,21 @@
 							</fieldset>
 						</form>
 						<br>
-						<form>
+						<form id="del-cat">
 							<fieldset>
 								<legend class="bg-dark text-white text-center">Eliminar categoría</legend>
 								<!-- Aquí los inputs y botones del form -->
+								<div class="form-group">
+									<label for="delcat-id">ID:</label>
+									<input type="text" id="delcat-id" class="form-control">
+								</div>
+								<br>
+								<button type="submit" class="btn btn-default btn-dark">Añadir</button>
+								<button type="reset" class="btn btn-danger">Reset</button>
 							</fieldset>
 						</form>
 					</div>
 				</div>
-		
-		
 	<footer><small>Diseño Web en Entorno Cliente - Juan Segura</small></footer>
     <script src="./dist/main.js"></script>
 </body>

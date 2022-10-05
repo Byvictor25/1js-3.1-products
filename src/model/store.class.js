@@ -1,6 +1,6 @@
 const Category = require('./category.class');
 const Product = require('./product.class');
-const datosIni = require('./datosIni.json');
+const datosIni = require('../datosIni.json');
 
 class Store {
     constructor(id, name) {
@@ -35,7 +35,7 @@ class Store {
     }
 
     getProductsByCategory(id) {
-        let getProducts = this.products.filter(product => product.category === id);
+        let getProducts = this.products.filter(product => product.category == id);
         return getProducts;
     }
 
@@ -46,13 +46,8 @@ class Store {
             try {
                 this.getCategoryByName(name);
             } catch {
-                let idCategory;
-                if(this.categories.length === 0) {
-                    idCategory = 1;
-                } else {
-                    idCategory = this.categories[(this.categories.length) - 1].id + 1;
-                }
-                let category = new Category (idCategory, name, descripcion);
+                let newId = this.getNextId(this.categories);
+                let category = new Category (newId, name, descripcion);
                 this.categories.push(category);
                 return category;
             } 
@@ -61,42 +56,41 @@ class Store {
     }   
 
     addProduct(payload) {
+        const unidades = parseInt(payload.units);
+        const precio = parseInt(payload.price);
+        const category = parseInt(payload.category);
         if(!payload.name) {
             throw 'No se ha introducido el nombre';
         }
-        if(!payload.category) {
+        if(!category) {
             throw 'No has indicado la categoria';
         } else {
-            this.getCategoryById(payload.category);
+            this.getCategoryById(category);
         }
 
-        if(!payload.price) {
+        if(!precio) {
             throw 'No se ha introducido ningn precio';
 
-        } else if(isNaN(payload.price) || payload.price < 0) {
+        } else if(isNaN(precio) || precio < 0) {
             throw 'No se ha introducido un numero entero';
         }
 
-        if(payload.units) {
-            if(isNaN(payload.units) || payload.units <= 0 || !Number.isInteger(payload.units)) {
+        if(unidades) {
+            if(isNaN(unidades) || unidades <= 0 || !Number.isInteger(unidades)) {
                 throw 'No se ha introducido las unidades correctamente';
             }
         }
-        let idProduct;
-        if(this.products.length === 0) {
-            idProduct = 1;
-        } else {
-            idProduct = this.products[(this.products.length) - 1].id + 1;
-        }
-        let product = new Product (idProduct, payload.name, payload.category, payload.price, payload.units);
+        let newId = this.getNextId(this.products);
+        let product = new Product (newId, payload.name, payload.category, payload.price, payload.units);
         this.products.push(product);
         return product;
 
     }
 
     delCategory(id) {
-        let categoria = this.getCategoryById(id);
-        let productCategory = this.getProductsByCategory(id);
+        const idToComprobe = parseInt(id);
+        let categoria = this.getCategoryById(idToComprobe);
+        let productCategory = this.getProductsByCategory(idToComprobe);
         if(productCategory.length > 0) {
             throw 'Esta categoria tiene productos';
         }
@@ -106,7 +100,8 @@ class Store {
     }
 
     delProduct(id) {
-        let producto = this.getProductById(id);
+        const idToComprobe = parseInt(id);
+        let producto = this.getProductById(idToComprobe);
         if(producto.units > 0) {
             throw 'Hay existencias del producto';
         }
@@ -145,6 +140,10 @@ class Store {
         productos.forEach((producto) => {
             this.products.push(new Product(producto.id, producto.name, producto.category, producto.price, producto.units))
         })
+    }
+
+    getNextId(array) {
+        return array.reduce((max, item) => (max > item.id)? max : item.id, 0) + 1;
     }
 }
 
