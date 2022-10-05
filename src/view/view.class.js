@@ -3,13 +3,14 @@ class View {
     renderProduct(producto) {
         const productUI = document.createElement('tr');
         productUI.setAttribute('id', 'prod-' + producto.id);
+        productUI.setAttribute('class', 'text-center');
         productUI.innerHTML = `
         <td>${producto.id}</td>
         <td>${producto.name}</td>
         <td>${producto.category}</td>
         <td>${producto.units}</td>
-        <td>${producto.price}</td>
-        <td>${producto.productImport()}</td>
+        <td>${producto.price} u/€</td>
+        <td>${producto.productImport()} €</td>
         `
         const tbodyUI = document.querySelector('#almacen tbody');
         tbodyUI.appendChild(productUI);
@@ -44,6 +45,12 @@ class View {
         `
         const mensajes = document.getElementById('messages');
         mensajes.appendChild(textUI);
+    }
+
+    renderStoreImport(totalImport) {
+        const importeUI = document.getElementById('importe');
+        importeUI.textContent = `
+        ${totalImport} €`;
     }
 }
 

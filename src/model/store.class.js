@@ -111,7 +111,7 @@ class Store {
     }
 
     totalImport() {
-        return this.products.reduce((total, producto) => total += producto.productImport())
+        return this.products.reduce((total, product) => total += product.productImport(),0);
     }
 
     orderByUnitsDesc() {

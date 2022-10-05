@@ -12,12 +12,14 @@ class Controller {
         this.store.initDatos();
         this.store.categories.forEach((category) => this.view.renderCategory(category));
         this.store.products.forEach((product) => this.view.renderProduct(product));
+        this.view.renderStoreImport(this.store.totalImport());
     }
 
     addProductToStore(dataForm) {
         try {
             const prod = this.store.addProduct(dataForm);
             this.view.renderProduct(prod);
+            this.view.renderStoreImport(this.store.totalImport());
         } catch(error) {
             this.view.renderMessege(error);
         }
