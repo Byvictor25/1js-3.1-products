@@ -41,11 +41,15 @@ class View {
         textUI.setAttribute('role', 'alert');
         textUI.innerHTML = `
         ${text}
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close" onclick="this.parentElement.remove()"></button>
         `
         const mensajes = document.getElementById('messages');
         mensajes.appendChild(textUI);
+
+        setInterval(() => {
+            textUI.remove();
+        }, 2000);
     }
+
 
     renderStoreImport(totalImport) {
         const importeUI = document.getElementById('importe');
