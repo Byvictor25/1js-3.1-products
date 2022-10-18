@@ -84,7 +84,57 @@ class Store {
         let product = new Product (newId, payload.name, payload.category, payload.price, payload.units);
         this.products.push(product);
         return product;
+    }
 
+    modProduct(payload) {
+        const id = parseInt(payload.id);
+        const unidades = parseInt(payload.units);
+        const precio = parseInt(payload.price);
+        const categoria = parseInt(payload.category);
+
+        if(!id) {
+            throw 'No se ha encontrado la id';
+        }
+        if(!payload.name) {
+            throw 'No se ha introducido el nombre';
+        }
+        if(!categoria) {
+            throw 'No has indicado la categoria';
+        } else {
+            this.getCategoryById(categoria);
+        }
+        if(!precio) {
+            throw 'No se ha introducido ningn precio';
+
+        } else if(isNaN(precio) || precio < 0) {
+            throw 'No se ha introducido un numero entero';
+        }
+        if(unidades) {
+            if(isNaN(unidades) || unidades <= 0 || !Number.isInteger(unidades)) {
+                throw 'No se ha introducido las unidades correctamente';
+            }
+        }
+        let product = this.getProductById(id);
+        product.name = payload.name;
+        product.category = categoria;
+        product.price = precio;
+        product.units = unidades;
+        return product;
+    }
+
+    addUnit(payload) {
+        let prod = this.getProductById(payload.id);
+        prod.units = payload.units + 1;
+        return prod;
+    }
+
+    delUnit(payload) {
+        let prod = this.getProductById(payload.id);
+        prod.units = payload.units - 1;
+        if(prod.units < 0) {
+            throw 'No se puede poner menos de 0 unidades';
+        }
+        return prod;
     }
 
     delCategory(id) {

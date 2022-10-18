@@ -8,7 +8,8 @@
 	<meta name="keywords" content="JavaScript, Ejercicio, HTML5, DAW">
 	<!-- CSS only -->
 	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-iYQeCzEYFbKjA/T2uDLTpkwGzCiq6soy8tYaI1GyVh/UjpbCx/TYkiZhlZB6+fzT" crossorigin="anonymous">
-
+	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+	<link rel="stylesheet" href="./src/css/estilos.css" type="text/css">
 </head>
 <body>
 	<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
@@ -16,17 +17,17 @@
 			<span class="navbar-brand" href="#">Almacén ACME</span>
 			<div class="collapse navbar-collapse" id="navbarNavAltMarkup">
 				<div class="navbar-nav">
-					<a class="nav-link active" aria-current="page" href="#">Productos</a>
-					<a class="nav-link" href="#">Categorías</a>
-					<a class="nav-link" href="#">Añadir producto</a>
-					<a class="nav-link" href="#">Añadir categoría</a>
-					<a class="nav-link" href="#">Sobre nosotros</a>
+					<a class="nav-link active" aria-current="page" href="#" id="Pag-prod">Productos</a>
+					<a class="nav-link" href="#" id="Pag-cat">Categorías</a>
+					<a class="nav-link" href="#" id="Pag-addProd">Añadir producto</a>
+					<a class="nav-link" href="#" id="Pag-addCat">Añadir categoría</a>
 				</div>
 			</div>
 		</div>
 	</nav>
 
 	<div class="container">
+		<div id="listado-productos">
         <header>
             <h1>Listado de productos</h1>
         </header>
@@ -51,7 +52,6 @@
                         </tr>
                     </thead>
                     <tbody>
-					
                         <!-- Aquí insertaremos los productos-->
                     </tbody>
                     <tfoot id="totalImport">
@@ -61,18 +61,37 @@
                 </table>
             </div>
         </div>
-
-
+		</div>
+		<div id="listado-categorias">
+		<header>
+            <h1>Listado de Categorias</h1>
+        </header>
+		<div class="row">
+            <div class="col-sm-12 col-md-12 col-lg-12" id="almacen2">
+                <table class="table table-striped table-hover table-responsive">
+                    <thead class="bg-dark">
+                        <tr class="text-white text-center">
+                            <th>Id</th>
+                            <th>Nombre</th>
+                            <th>descripción</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+					</tbody>
+                </table>
+            </div>
+        </div>
+		</div>
 				<!-- Acciones sobre el almacén -->
 				<div class="row">
-					<div class="col-sm-6 col-md-4 col-lg-4">
+					<div class="col-sm-6 col-md-4 col-lg-4" id="add-producto">
 						<form id="new-prod">
 							<fieldset>
 								<legend class="bg-dark text-white text-center">Añadir producto</legend>
 								<!-- Aquí los inputs y botones del form -->
 								<div class="form-group">
 									<label for="newprod-id">ID:</label>
-									<input type="text" class="form-control" disabled>
+									<input type="text" class="form-control" id="newprod-id" disabled>
 								</div>
 								<div class="form-group">
 									<label for="newprod-name">Nombre:</label>
@@ -81,8 +100,8 @@
 								<div class="form-group">
 									<label for="newprod-cat">Categoría:</label>
 									<select class="form-control" id="newprod-cat">
-										<option value="" id="">--- Selecciona categoría ---</option>
-										</select>
+										<option value="">--- Selecciona categoría ---</option>
+									</select>
 								</div>
 								<div class="form-group">
 									<label for="newprod-units">Unidades.:</label>
@@ -93,12 +112,12 @@
 									<input type="number" id="newprod-price" class="form-control">
 								</div>
 								<br>
-								<button type="submit" class="btn btn-default btn-dark">Añadir</button>
+								<button type="submit" id="newprod-submit" class="btn btn-default btn-dark">Añadir</button>
 								<button type="reset" class="btn btn-danger">Reset</button>
 							</fieldset>
 						</form>
 					</div>
-					<div class="col-sm-6 col-md-4 col-lg-4">
+					<div class="col-sm-6 col-md-4 col-lg-4" id="add-categoria">
 						<form id="new-cat">
 							<fieldset>
 								<legend class="bg-dark text-white text-center">Añadir categoría</legend>
@@ -113,36 +132,6 @@
 								<div class="form-group">
 									<label for="newpcat-desc">descripción:</label>
 									<input type="text" id="newcat-desc" class="form-control">
-								</div>
-								<br>
-								<button type="submit" class="btn btn-default btn-dark">Añadir</button>
-								<button type="reset" class="btn btn-danger">Reset</button>
-								
-							</fieldset>
-						</form>
-					</div>
-					<div class="col-sm-6 col-md-4 col-lg-4">
-						<form id="del-prod">
-							<fieldset>
-								<legend class="bg-dark text-white text-center">Eliminar producto</legend>
-								<!-- Aquí los inputs y botones del form -->
-								<div class="form-group">
-									<label for="delprod-id">ID:</label>
-									<input type="text" id="delprod-id" class="form-control">
-								</div>
-								<br>
-								<button type="submit" class="btn btn-default btn-dark">Añadir</button>
-								<button type="reset" class="btn btn-danger">Reset</button>
-							</fieldset>
-						</form>
-						<br>
-						<form id="del-cat">
-							<fieldset>
-								<legend class="bg-dark text-white text-center">Eliminar categoría</legend>
-								<!-- Aquí los inputs y botones del form -->
-								<div class="form-group">
-									<label for="delcat-id">ID:</label>
-									<input type="text" id="delcat-id" class="form-control">
 								</div>
 								<br>
 								<button type="submit" class="btn btn-default btn-dark">Añadir</button>
