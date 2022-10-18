@@ -112,6 +112,13 @@ class View {
         boton.textContent = `Modificar`;
     }
 
+    cambiarTitulo() {
+        const titulo = document.querySelector('#new-prod legend');
+        titulo.textContent = `Añadir producto`;
+        const boton = document.getElementById('newprod-submit');
+        boton.textContent = `Añadir`;
+    }
+
     renderCategory(category) {
         const categoryUI = document.createElement('option');
         categoryUI.setAttribute('value', category.id);

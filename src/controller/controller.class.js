@@ -68,6 +68,7 @@ class Controller {
             const prod = this.store.modProduct(dataForm);
             this.view.rendermodProd(prod);
             this.view.renderStoreImport(this.store.totalImport());
+            this.view.cambiarTitulo();
             this.view.ocultarTodo();
         } catch(error) {
             this.view.renderMessege(error);
