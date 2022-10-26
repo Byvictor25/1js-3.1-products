@@ -192,6 +192,10 @@ class Store {
         })
     }
 
+    checkName(name, id) {
+        return this.products.some(product => product.name === name && product.id != id);
+    }
+
     getNextId(array) {
         return array.reduce((max, item) => (max > item.id)? max : item.id, 0) + 1;
     }

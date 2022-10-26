@@ -85,7 +85,7 @@
 				<!-- Acciones sobre el almacén -->
 				<div class="row">
 					<div class="col-sm-6 col-md-4 col-lg-4" id="add-producto">
-						<form id="new-prod">
+						<form id="new-prod" novalidate>
 							<fieldset>
 								<legend class="bg-dark text-white text-center">Añadir producto</legend>
 								<!-- Aquí los inputs y botones del form -->
@@ -95,21 +95,25 @@
 								</div>
 								<div class="form-group">
 									<label for="newprod-name">Nombre:</label>
-									<input type="text" id="newprod-name" class="form-control">
+									<input type="text" id="newprod-name" class="form-control" required minlength="5" maxlength="50">
+									<span class="error"></span>
 								</div>
 								<div class="form-group">
 									<label for="newprod-cat">Categoría:</label>
-									<select class="form-control" id="newprod-cat">
+									<select class="form-control" id="newprod-cat" required>
 										<option value="">--- Selecciona categoría ---</option>
 									</select>
+									<span class="error"></span>
 								</div>
 								<div class="form-group">
 									<label for="newprod-units">Unidades.:</label>
-									<input type="number" id="newprod-units" class="form-control">
+									<input type="number" id="newprod-units" class="form-control" value="0" min="0" max="100">
+									<span class="error"></span>
 								</div>
 								<div class="form-group">
 									<label for="newprod-price">Precio/u.:</label>
-									<input type="number" id="newprod-price" class="form-control">
+									<input type="number" id="newprod-price" class="form-control" required min="0" step="0.01">
+									<span class="error"></span>
 								</div>
 								<br>
 								<button type="submit" id="newprod-submit" class="btn btn-default btn-dark">Añadir</button>
@@ -140,7 +144,7 @@
 						</form>
 					</div>
 				</div>
-	<footer><small>Diseño Web en Entorno Cliente - Juan Segura</small></footer>
+	<footer><small>Diseño Web en Entorno Cliente - Victor Pérez</small></footer>
     <script src="./dist/main.js"></script>
 </body>
 </html>

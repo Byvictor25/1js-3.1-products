@@ -1,3 +1,12 @@
 .oculto{
     display: none;
 }
+
+.error {
+    color: red;
+}
+
+input:invalid,
+select:invalid{
+    border: 1px dashed red;
+}

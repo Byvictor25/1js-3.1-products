@@ -8,6 +8,43 @@ class Controller {
         this.view = new View()
     }
 
+    setListeners() {
+        const inputID = document.getElementById('newprod-id');
+        const inputNombre = document.getElementById('newprod-name');
+        inputNombre.addEventListener('blur', () => {
+            if(this.store.checkName(inputNombre.value, inputID.value)) {
+                inputNombre.setCustomValidity("El nombre ya existe");
+            } else {
+                inputNombre.setCustomValidity("");
+            }
+            inputNombre.nextElementSibling.textContent = inputNombre.validationMessage;
+        })
+        const inputCat = document.getElementById('newprod-cat');
+        inputCat.addEventListener('blur', () => {
+            inputCat.nextElementSibling.textContent = inputCat.validationMessage;
+        })
+        const inputUnits = document.getElementById('newprod-units');
+        inputUnits.addEventListener('blur', () => {
+            inputUnits.nextElementSibling.textContent = inputUnits.validationMessage;
+        })
+        const inputPrice = document.getElementById('newprod-price');
+        inputPrice.addEventListener('blur', () => {
+            inputPrice.nextElementSibling.textContent = inputPrice.validationMessage;
+        })
+        document.getElementById('new-prod').addEventListener('submit', (event) => {
+            event.preventDefault();
+        
+            inputNombre.nextElementSibling.textContent = inputNombre.validationMessage;
+            
+            inputCat.nextElementSibling.textContent = inputCat.validationMessage;
+            
+            inputUnits.nextElementSibling.textContent = inputUnits.validationMessage;
+
+            inputPrice.nextElementSibling.textContent = inputPrice.validationMessage;
+
+        })
+    }
+
     init() {
         this.store.initDatos();
         this.store.categories.forEach((category) => this.view.renderCategory(category));
@@ -16,6 +53,7 @@ class Controller {
         this.view.renderStoreImport(this.store.totalImport());
         this.view.ocultarTodo();
         this.initMenu();
+        this.setListeners();
     }
 
     initMenu() {
@@ -34,17 +72,19 @@ class Controller {
     }
 
     addProductToStore(dataForm) {
-        if(dataForm.id) {
-            this.modProduct(dataForm);
-            return;
-        }
-        try {
-            const prod = this.store.addProduct(dataForm);
-            this.view.renderProduct(prod, this.deleteProductFromStore.bind(this), this.addUnit.bind(this), this.delUnit.bind(this));
-            this.view.renderStoreImport(this.store.totalImport());
-            this.view.ocultarTodo();
-        } catch(error) {
-            this.view.renderMessege(error);
+        if(document.getElementById('new-prod').checkValidity()) {
+            if(dataForm.id) {
+                this.modProduct(dataForm);
+                return;
+            }
+            try {
+                const prod = this.store.addProduct(dataForm);
+                this.view.renderProduct(prod, this.deleteProductFromStore.bind(this), this.addUnit.bind(this), this.delUnit.bind(this));
+                this.view.renderStoreImport(this.store.totalImport());
+                this.view.ocultarTodo();
+            } catch(error) {
+                this.view.renderMessege(error);
+            }
         }
     }
 
@@ -64,15 +104,18 @@ class Controller {
     }
 
     modProduct(dataForm) {
-        try {
-            const prod = this.store.modProduct(dataForm);
-            this.view.rendermodProd(prod);
-            this.view.renderStoreImport(this.store.totalImport());
-            this.view.cambiarTitulo();
-            this.view.ocultarTodo();
-        } catch(error) {
-            this.view.renderMessege(error);
+        if(document.getElementById('new-prod').checkValidity()) {
+            try {
+                const prod = this.store.modProduct(dataForm);
+                this.view.rendermodProd(prod);
+                this.view.renderStoreImport(this.store.totalImport());
+                this.view.cambiarTitulo();
+                this.view.ocultarTodo();
+            } catch(error) {
+                this.view.renderMessege(error);
+            }
         }
+
     }
 
     deleteProductFromStore(id) {

@@ -18,7 +18,6 @@ window.addEventListener('load', () => {
     const category = document.getElementById('newprod-cat').value
     const units = document.getElementById('newprod-units').value  
     myController.addProductToStore({ id, name, price, category, units })
-    document.getElementById('new-prod').reset();
   })
 
   document.getElementById('new-cat').addEventListener('submit', (event) => {
@@ -42,12 +41,4 @@ window.addEventListener('load', () => {
     // )
     document.getElementById('new-cat').reset();
   })
-
-
-  document.getElementById('del-cat').addEventListener('submit', (event) => {
-    event.preventDefault()
-
-    myController.deleteCategoryFromStore(document.getElementById('delcat-id').value)
-  })
-  document.getElementById('del-cat').reset();
 })
