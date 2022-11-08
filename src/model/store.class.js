@@ -1,6 +1,7 @@
 const Category = require('./category.class');
 const Product = require('./product.class');
-const datosIni = require('../datosIni.json');
+const SERVER = 'http://localhost:3000';
+
 
 class Store {
     constructor(id, name) {
@@ -39,15 +40,15 @@ class Store {
         return getProducts;
     }
 
-    addCategory(name, descripcion) {
+    async addCategory(name, description) {
         if(!name) {
             throw 'No se ha introducido el nombre';
         } else {
             try {
                 this.getCategoryByName(name);
             } catch {
-                let newId = this.getNextId(this.categories);
-                let category = new Category (newId, name, descripcion);
+                const cat = await this.addCategoryToBD({name, description})
+                let category = new Category (cat.id, cat.name, cat.description);
                 this.categories.push(category);
                 return category;
             } 
@@ -55,10 +56,11 @@ class Store {
         }
     }   
 
-    addProduct(payload) {
-        const unidades = parseInt(payload.units);
-        const precio = parseInt(payload.price);
+    async addProduct(payload) {
+        const units = parseInt(payload.units);
+        const price = parseInt(payload.price);
         const category = parseInt(payload.category);
+        const name = payload.name;
         if(!payload.name) {
             throw 'No se ha introducido el nombre';
         }
@@ -68,29 +70,30 @@ class Store {
             this.getCategoryById(category);
         }
 
-        if(!precio) {
+        if(!price) {
             throw 'No se ha introducido ningn precio';
 
-        } else if(isNaN(precio) || precio < 0) {
+        } else if(isNaN(price) || price < 0) {
             throw 'No se ha introducido un numero entero';
         }
 
-        if(unidades) {
-            if(isNaN(unidades) || unidades <= 0 || !Number.isInteger(unidades)) {
+        if(units) {
+            if(isNaN(units) || units <= 0 || !Number.isInteger(units)) {
                 throw 'No se ha introducido las unidades correctamente';
             }
         }
-        let newId = this.getNextId(this.products);
-        let product = new Product (newId, payload.name, payload.category, payload.price, payload.units);
+        const producto = await this.addProductToBD({name, category, price, units})
+        let product = new Product (producto.id, producto.name, producto.category, producto.price, producto.units);
         this.products.push(product);
         return product;
     }
 
-    modProduct(payload) {
+    async modProduct(payload) {
         const id = parseInt(payload.id);
-        const unidades = parseInt(payload.units);
-        const precio = parseInt(payload.price);
-        const categoria = parseInt(payload.category);
+        const units = parseInt(payload.units);
+        const price = parseInt(payload.price);
+        const category = parseInt(payload.category);
+        const name = payload.name;
 
         if(!id) {
             throw 'No se ha encontrado la id';
@@ -98,39 +101,46 @@ class Store {
         if(!payload.name) {
             throw 'No se ha introducido el nombre';
         }
-        if(!categoria) {
+        if(!category) {
             throw 'No has indicado la categoria';
         } else {
-            this.getCategoryById(categoria);
+            this.getCategoryById(category);
         }
-        if(!precio) {
+        if(!price) {
             throw 'No se ha introducido ningn precio';
 
-        } else if(isNaN(precio) || precio < 0) {
+        } else if(isNaN(price) || price < 0) {
             throw 'No se ha introducido un numero entero';
         }
-        if(unidades) {
-            if(isNaN(unidades) || unidades <= 0 || !Number.isInteger(unidades)) {
+        if(units) {
+            if(isNaN(units) || units <= 0 || !Number.isInteger(units)) {
                 throw 'No se ha introducido las unidades correctamente';
             }
         }
+        const producto = await this.modProductInBD({id, name, category, units, price})
         let product = this.getProductById(id);
-        product.name = payload.name;
-        product.category = categoria;
-        product.price = precio;
-        product.units = unidades;
+        product.name = producto.name;
+        product.category = producto.category;
+        product.price = producto.price;
+        product.units = producto.units;
         return product;
     }
 
-    addUnit(payload) {
+    async addUnit(payload) {
+        const id = payload.id;
+        const units = payload.units + 1;
+        const producto = await this.modUnitsInBD(id, units);
         let prod = this.getProductById(payload.id);
-        prod.units = payload.units + 1;
+        prod.units = producto.units;
         return prod;
     }
 
-    delUnit(payload) {
+    async delUnit(payload) {
+        const id = payload.id;
+        const units = payload.units - 1;
+        const producto = await this.modUnitsInBD(id, units);
         let prod = this.getProductById(payload.id);
-        prod.units = payload.units - 1;
+        prod.units = producto.units;
         if(prod.units < 0) {
             throw 'No se puede poner menos de 0 unidades';
         }
@@ -149,12 +159,13 @@ class Store {
         return categoria;
     }
 
-    delProduct(id) {
+    async delProduct(id) {
         const idToComprobe = parseInt(id);
         let producto = this.getProductById(idToComprobe);
         if(producto.units > 0) {
             throw 'Hay existencias del producto';
         }
+        await this.delProductInBD(id);
         let productIndex = this.products.indexOf(producto);
         this.products.splice(productIndex,1);
         return producto;
@@ -190,6 +201,120 @@ class Store {
         productos.forEach((producto) => {
             this.products.push(new Product(producto.id, producto.name, producto.category, producto.price, producto.units))
         })
+    }
+
+    async loadData() {
+        try {
+            const response = await fetch(SERVER + '/categories')
+            if (!response.ok) {
+                throw `Error ${response.status} de la BBDD: ${response.statusText}`
+            }
+            const categorias = await response.json()
+            categorias.forEach(category => this.categories.push(new Category(category.id, category.name,category.description)))
+        } catch (error) {
+            alert(error)
+        }
+        try {
+            const response = await fetch(SERVER + '/products')
+            if (!response.ok) {
+                throw `Error ${response.status} de la BBDD: ${response.statusText}`
+            }
+            const products = await response.json()
+            products.forEach(product => this.products.push(new Product(product.id, product.name, product.category, product.price, product.units)))
+        } catch (error) {
+            alert(error)
+        }
+    }
+
+    async addCategoryToBD(cat) {
+        try {
+            const response = await fetch(SERVER + '/categories', {
+                method: 'POST',
+                body: JSON.stringify(cat),
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+            if (!response.ok) {
+                throw `Error ${response.status} de la BBDD: ${response.statusText}`
+            }
+            const categoria = await response.json()
+            return categoria;
+        } catch (error) {
+            throw 'Error' + error;
+        }
+    }
+
+    async addProductToBD(producto) {
+        try {
+            const response = await fetch(SERVER + '/products', {
+                method: 'POST',
+                body: JSON.stringify(producto),
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+            if (!response.ok) {
+                throw `Error ${response.status} de la BBDD: ${response.statusText}`
+            }
+            const product = await response.json()
+            return product;
+        } catch (error) {
+            throw 'Error' + error;
+        }
+    }
+
+    async delProductInBD(id) {
+        try {
+            const response = await fetch(SERVER + '/products/' + id, {
+                method: 'DELETE'
+            })
+            if (!response.ok) {
+                throw `Error ${response.status} de la BBDD: ${response.statusText}`
+            }
+        } catch (error) {
+            throw 'Error' + error;
+        }
+    }
+
+    async modProductInBD(producto) {
+        try {
+            const response = await fetch(SERVER + '/products/' + producto.id, {
+                method: 'PUT',
+                body: JSON.stringify(producto),
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+            if (!response.ok) {
+                throw `Error ${response.status} de la BBDD: ${response.statusText}`
+            }
+            const product = await response.json()
+            return product;
+        } catch (error) {
+            throw 'Error' + error;
+        }
+    }
+
+    async modUnitsInBD(id, units) {
+        try {
+            const response = await fetch(SERVER + '/products/' + id, {
+                method: 'PATCH',
+                body: JSON.stringify({
+                    units : units
+                }),
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+            if (!response.ok) {
+                throw `Error ${response.status} de la BBDD: ${response.statusText}`
+            }
+            const product = await response.json()
+            return product;
+        } catch (error) {
+            throw 'Error' + error;
+        }
     }
 
     checkName(name, id) {

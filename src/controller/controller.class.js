@@ -45,8 +45,12 @@ class Controller {
         })
     }
 
-    init() {
-        this.store.initDatos();
+    async init() {
+        try {
+            await this.store.loadData()
+        } catch (error) {
+            this.view.renderMessege('Error cargando los datos: ' + error)
+        }
         this.store.categories.forEach((category) => this.view.renderCategory(category));
         this.store.categories.forEach((category) => this.view.renderCategoryTable(category));
         this.store.products.forEach((product) => this.view.renderProduct(product, this.deleteProductFromStore.bind(this), this.addUnit.bind(this), this.delUnit.bind(this)));
@@ -71,14 +75,14 @@ class Controller {
         })
     }
 
-    addProductToStore(dataForm) {
+    async addProductToStore(dataForm) {
         if(document.getElementById('new-prod').checkValidity()) {
             if(dataForm.id) {
                 this.modProduct(dataForm);
                 return;
             }
             try {
-                const prod = this.store.addProduct(dataForm);
+                const prod = await this.store.addProduct(dataForm);
                 this.view.renderProduct(prod, this.deleteProductFromStore.bind(this), this.addUnit.bind(this), this.delUnit.bind(this));
                 this.view.renderStoreImport(this.store.totalImport());
                 this.view.ocultarTodo();
@@ -88,13 +92,13 @@ class Controller {
         }
     }
 
-    addCategoryToStore(payload) {
+    async addCategoryToStore(payload) {
         try {
             if(payload.description === "") {
                 let undefined;
                 payload.description = undefined;
             }
-            const cat = this.store.addCategory(payload.name,payload.description);
+            const cat = await this.store.addCategory(payload.name,payload.description);
             this.view.renderCategory(cat);
             this.view.renderCategoryTable(cat);
             this.view.mostrarCategorias();
@@ -103,10 +107,10 @@ class Controller {
         }
     }
 
-    modProduct(dataForm) {
+    async modProduct(dataForm) {
         if(document.getElementById('new-prod').checkValidity()) {
             try {
-                const prod = this.store.modProduct(dataForm);
+                const prod = await this.store.modProduct(dataForm);
                 this.view.rendermodProd(prod);
                 this.view.renderStoreImport(this.store.totalImport());
                 this.view.cambiarTitulo();
@@ -115,14 +119,13 @@ class Controller {
                 this.view.renderMessege(error);
             }
         }
-
     }
 
-    deleteProductFromStore(id) {
+    async deleteProductFromStore(id) {
         try {
             const product = this.store.getProductById(Number(id));
             if(confirm(`Desea borrar el producto ${product.name}`)) {
-                const product = this.store.delProduct(id);
+                const product = await this.store.delProduct(id);
                 this.view.renderDelProduct(product);
             }
         } catch(error) {
@@ -139,15 +142,15 @@ class Controller {
         }
     }
 
-    addUnit(producto) {
-        let prod = this.store.addUnit(producto);
+    async addUnit(producto) {
+        let prod = await this.store.addUnit(producto);
         this.view.renderUnits(prod);
         this.view.renderStoreImport(this.store.totalImport());
     }
 
-    delUnit(producto) {
+    async delUnit(producto) {
         try {
-            let prod = this.store.delUnit(producto);
+            let prod = await this.store.delUnit(producto);
             this.view.renderUnits(prod);
             this.view.renderStoreImport(this.store.totalImport());
         } catch(error) {
