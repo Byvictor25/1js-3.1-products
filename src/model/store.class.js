@@ -212,7 +212,7 @@ class Store {
             const categorias = await response.json()
             categorias.forEach(category => this.categories.push(new Category(category.id, category.name,category.description)))
         } catch (error) {
-            alert(error)
+            throw 'ErrorServer:' + error;
         }
         try {
             const response = await fetch(SERVER + '/products')
@@ -222,7 +222,7 @@ class Store {
             const products = await response.json()
             products.forEach(product => this.products.push(new Product(product.id, product.name, product.category, product.price, product.units)))
         } catch (error) {
-            alert(error)
+            throw 'ErrorServer:' + error;
         }
     }
 

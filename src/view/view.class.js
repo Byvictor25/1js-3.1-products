@@ -150,7 +150,7 @@ class View {
 
         setInterval(() => {
             textUI.remove();
-        }, 2000);
+        }, 3000);
     }
 
     renderStoreImport(totalImport) {
